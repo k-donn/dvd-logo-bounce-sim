@@ -1,3 +1,9 @@
+/*
+TODO
+- Document functions
+- Refactor variable names
+*/
+
 let xVelocity = 1;
 let yVelocity = 1;
 
