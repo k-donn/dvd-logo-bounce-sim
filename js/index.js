@@ -1,17 +1,16 @@
 /*
 TODO
-- Document functions
-- Refactor variable names
+- Refactor to class
 */
 
 let xVelocity = 1;
 let yVelocity = 1;
 
-let wl = 140;
-let hl = 140;
+let logoWidth = 140;
+let logoHeight = 140;
 
-let ws = 800;
-let hs = 600;
+let canvasWidth = 800;
+let canvasHeight = 600;
 
 let x = 0;
 let y = 0;
@@ -22,6 +21,13 @@ let period, t, start;
 
 let corner1, corner2;
 
+/**
+ * Return the largest number that divides to the two numbers (the greatest common denominator).
+ *
+ * @param {number} a First term
+ * @param {number} b Second term
+ * @returns {number} The greatest common denominator
+ */
 function gcd(a, b) {
 	if (!b) {
 		return a;
@@ -30,24 +36,31 @@ function gcd(a, b) {
 	return gcd(b, a % b);
 }
 
+/**
+ * Return the smallest number that is divisable by both terms (the lowest common multiple).
+ *
+ * @param {number} a First term
+ * @param {number} b Second term
+ * @returns {number} The lowest common multiple
+ */
 function lcm(a, b) {
 	return Math.abs(a * b) / gcd(a, b);
 }
 
-let W0 = ws - wl;
-let H0 = hs - hl;
+let widthDiff = canvasWidth - logoWidth;
+let heightDiff = canvasHeight - logoHeight;
 
-console.log("W0 " + W0);
-console.log("H0 " + H0);
-console.log("gcd " + gcd(W0, H0));
-console.log("lcm wl hl " + lcm(W0, H0));
+console.log("Width Diff " + widthDiff);
+console.log("Height Diff " + heightDiff);
+console.log("gcd of WdthDiff and HgtDiff " + gcd(widthDiff, heightDiff));
+console.log("lcm of WdthDiff and HgtDiff " + lcm(widthDiff, heightDiff));
 
-if (Math.abs(x - y) % gcd(W0, H0) === 0) {
+if (Math.abs(x - y) % gcd(widthDiff, heightDiff) === 0) {
 	// corners will be reached
-	if ((Math.abs(x - y) / gcd(W0, H0)) % 2 === 0) {
+	if ((Math.abs(x - y) / gcd(widthDiff, heightDiff)) % 2 === 0) {
 		corner1 =
-			((lcm(W0, H0) / H0) % 2 === 0 ? "T" : "B") +
-			((lcm(W0, H0) / W0) % 2 === 0 ? "L" : "R");
+			((lcm(widthDiff, heightDiff) / heightDiff) % 2 === 0 ? "T" : "B") +
+			((lcm(widthDiff, heightDiff) / widthDiff) % 2 === 0 ? "L" : "R");
 		corner2 = "TL";
 
 		console.group("corner-1");
@@ -59,8 +72,8 @@ if (Math.abs(x - y) % gcd(W0, H0) === 0) {
 		console.groupEnd("corner-2");
 	} else {
 		corner1 =
-			((lcm(W0, H0) / H0) % 2 !== 0 ? "T" : "B") +
-			((lcm(W0, H0) / W0) % 2 !== 0 ? "L" : "R");
+			((lcm(widthDiff, heightDiff) / heightDiff) % 2 !== 0 ? "T" : "B") +
+			((lcm(widthDiff, heightDiff) / widthDiff) % 2 !== 0 ? "L" : "R");
 		corner2 = "BR";
 
 		console.group("corner-1");
@@ -75,6 +88,9 @@ if (Math.abs(x - y) % gcd(W0, H0) === 0) {
 	console.log("No corner!");
 }
 
+/**
+ * Update the position of the logo and detect collision of the logo with the walls.
+ */
 function animate() {
 	// reqAnimFrame =
 	// 	window.requestAnimationFrame ||
@@ -89,14 +105,14 @@ function animate() {
 		x += xVelocity;
 		y += yVelocity;
 
-		if (y + hl === hs && x + wl === ws) {
+		if (y + logoHeight === canvasHeight && x + logoWidth === canvasWidth) {
 			// debugger;
 			console.log("bottom right");
 		}
-		if (y + hl === hs && y === 0) {
+		if (y + logoHeight === canvasHeight && y === 0) {
 			console.log("bottom left");
 		}
-		if (x === 0 && x + wl === ws) {
+		if (x === 0 && x + logoWidth === canvasWidth) {
 			console.log("top right");
 		}
 		if (x === 0 && y === 0) {
@@ -104,7 +120,7 @@ function animate() {
 		}
 
 		// Right
-		if (x + wl === ws) {
+		if (x + logoWidth === canvasWidth) {
 			if (!t) {
 				t = new Date().getTime() - start;
 			}
@@ -115,7 +131,7 @@ function animate() {
 			yVelocity = -yVelocity;
 		}
 		// Bottom
-		if (y + hl === hs) {
+		if (y + logoHeight === canvasHeight) {
 			yVelocity = -yVelocity;
 		}
 		// Top
@@ -127,17 +143,20 @@ function animate() {
 	draw();
 }
 
+/**
+ * Initialize the canvas and canvas elements.
+ */
 function draw() {
-	let canvas = document.getElementById("c");
+	let canvas = document.getElementById("mockScreen");
 	let context = canvas.getContext("2d");
-	context.clearRect(0, 0, ws, hs);
+	context.clearRect(0, 0, canvasWidth, canvasHeight);
 	context.fillStyle = "#000000";
-	context.fillRect(0, 0, ws, hs);
+	context.fillRect(0, 0, canvasWidth, canvasHeight);
 	context.fillStyle = "#00ff00";
-	context.fillRect(x, y, wl, hl);
+	context.fillRect(x, y, logoWidth, logoHeight);
 
 	if (t) {
-		period = (t * lcm(W0, H0)) / W0;
+		period = (t * lcm(widthDiff, heightDiff)) / widthDiff;
 		context.fillStyle = "#ff0000";
 		context.font = "18px Courier New";
 		let timeToImpact =
@@ -154,9 +173,10 @@ function draw() {
 	}
 }
 
-let ctx = document.getElementById("c").getContext("2d");
-ctx.canvas.width = ws;
-ctx.canvas.height = hs;
+let el = document.getElementById("mockScreen");
+let ctx = el.getContext("2d");
+ctx.canvas.width = canvasWidth;
+ctx.canvas.height = canvasHeight;
 
 // animate();
 start = new Date().getTime();
