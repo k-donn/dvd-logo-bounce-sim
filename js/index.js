@@ -105,6 +105,7 @@ function animate() {
 		x += xVelocity;
 		y += yVelocity;
 
+		// The logo is drawn from its top-right corner
 		if (y + logoHeight === canvasHeight && x + logoWidth === canvasWidth) {
 			// debugger;
 			console.log("bottom right");
