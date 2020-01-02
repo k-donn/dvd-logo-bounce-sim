@@ -259,12 +259,3 @@ class Logo {
 		}, 1000 / 60);
 	}
 }
-
-let el = document.getElementById("mockScreen");
-let ctx = el.getContext("2d");
-ctx.canvas.width = 800;
-ctx.canvas.height = 600;
-
-let logo = new Logo(el, ctx, ctx.canvas.width, ctx.canvas.height, 140, 140, 5);
-
-logo.startAnim();

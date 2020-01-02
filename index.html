@@ -2,12 +2,30 @@
 <html>
 	<head>
 		<title>Bouncing logo stats</title>
-		<link rel="stylesheet" href="/logo-bounce/css/index.css" />
-		<link rel="shortcut icon" href="/logo-bounce/img/dvd-logo2.jpg" type="image/jpeg">
+		<link rel="stylesheet" href="/css/index.css" />
+		<link rel="shortcut icon" href="/img/dvd-logo2.jpg" type="image/jpeg" />
 	</head>
 
 	<body>
 		<canvas id="mockScreen"></canvas>
 	</body>
-	<script src="/logo-bounce/js/index.js"></script>
+	<script src="/js/logo.js"></script>
+	<script>
+		let el = document.getElementById("mockScreen");
+		let ctx = el.getContext("2d");
+		ctx.canvas.width = 800;
+		ctx.canvas.height = 600;
+
+		let logo = new Logo(
+			el,
+			ctx,
+			ctx.canvas.width,
+			ctx.canvas.height,
+			140,
+			140,
+			5
+		);
+
+		logo.startAnim();
+	</script>
 </html>
