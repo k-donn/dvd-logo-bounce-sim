@@ -3,6 +3,11 @@ TODO
 - Type hints?
 */
 
+/**
+ * Simulate a DVD logo bouncing on a TV screen. This predicts
+ * which two corners it will hit first and how long it takes
+ * between corner hits.
+ */
 class Logo {
 	constructor(
 		canvas,
