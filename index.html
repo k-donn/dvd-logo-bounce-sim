@@ -13,16 +13,18 @@
 	<script>
 		let el = document.getElementById("mockScreen");
 		let ctx = el.getContext("2d");
-		ctx.canvas.width = 800;
-		ctx.canvas.height = 600;
+		ctx.canvas.width = 1216;
+		ctx.canvas.height = 572;
+
+		let img = new Image();
+		img.src = "/img/dvd-logo2.jpg";
 
 		let logo = new Logo(
 			el,
 			ctx,
 			ctx.canvas.width,
 			ctx.canvas.height,
-			140,
-			140,
+			img,
 			5
 		);
 

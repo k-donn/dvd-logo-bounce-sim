@@ -9,17 +9,10 @@ TODO
  * between corner hits.
  */
 class Logo {
-	constructor(
-		canvas,
-		context,
-		canvasWidth,
-		canvasHeight,
-		logoWidth,
-		logoHeight,
-		rate
-	) {
+	constructor(canvas, context, canvasWidth, canvasHeight, img, rate) {
 		this.canvas = canvas;
 		this.context = context;
+		this.img = img;
 
 		this.x = 0;
 		this.y = 0;
@@ -27,8 +20,8 @@ class Logo {
 		this.xVelocity = 1;
 		this.yVelocity = 1;
 
-		this.logoWidth = logoWidth;
-		this.logoHeight = logoHeight;
+		this.logoWidth = img.width;
+		this.logoHeight = img.height;
 
 		this.canvasWidth = canvasWidth;
 		this.canvasHeight = canvasHeight;
@@ -42,8 +35,8 @@ class Logo {
 		this.corner1 = null;
 		this.corner2 = null;
 
-		this.widthDiff = canvasWidth - logoWidth;
-		this.heightDiff = canvasHeight - logoHeight;
+		this.widthDiff = this.canvasWidth - this.logoWidth;
+		this.heightDiff = this.canvasHeight - this.logoHeight;
 
 		console.log("Width Diff " + this.widthDiff);
 		console.log("Height Diff " + this.heightDiff);
@@ -157,10 +150,11 @@ class Logo {
 	 */
 	draw() {
 		this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+
 		this.context.fillStyle = "#000000";
 		this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-		this.context.fillStyle = "#00ff00";
-		this.context.fillRect(this.x, this.y, this.logoWidth, this.logoHeight);
+
+		this.context.drawImage(this.img, this.x, this.y);
 
 		if (this.t) {
 			this.period =
