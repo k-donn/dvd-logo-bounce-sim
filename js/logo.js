@@ -9,10 +9,13 @@ TODO
  * between corner hits.
  */
 class Logo {
-	constructor(canvas, context, canvasWidth, canvasHeight, img, rate) {
+	constructor(canvas, context, canvasWidth, canvasHeight, imgArr, rate) {
 		this.canvas = canvas;
 		this.context = context;
-		this.img = img;
+
+		this.imgIndex = 0;
+		this.currImg = imgArr[this.imgIndex];
+		this.imgArr = imgArr;
 
 		this.x = 0;
 		this.y = 0;
@@ -20,8 +23,8 @@ class Logo {
 		this.xVelocity = 1;
 		this.yVelocity = 1;
 
-		this.logoWidth = img.width;
-		this.logoHeight = img.height;
+		this.logoWidth = imgArr[0].width;
+		this.logoHeight = imgArr[0].height;
 
 		this.canvasWidth = canvasWidth;
 		this.canvasHeight = canvasHeight;
@@ -154,7 +157,7 @@ class Logo {
 		this.context.fillStyle = "#000000";
 		this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-		this.context.drawImage(this.img, this.x, this.y);
+		this.context.drawImage(this.currImg, this.x, this.y);
 
 		if (this.t) {
 			this.period =
@@ -203,25 +206,30 @@ class Logo {
 			this.x += this.xVelocity;
 			this.y += this.yVelocity;
 
-			// The logo is drawn from its top-right corner
+			let bounced = false;
+
+			// The logo is drawn from its top-left corner
 			if (
 				this.y + this.logoHeight === this.canvasHeight &&
 				this.x + this.logoWidth === this.canvasWidth
 			) {
-				// debugger;
 				console.log("bottom right");
+				bounced = true;
 			}
 			if (
 				this.y + this.logoHeight === this.canvasHeight &&
-				this.y === 0
+				this.x === 0
 			) {
 				console.log("bottom left");
+				bounced = true;
 			}
-			if (this.x === 0 && this.x + this.logoWidth === this.canvasWidth) {
+			if (this.y === 0 && this.x + this.logoWidth === this.canvasWidth) {
 				console.log("top right");
+				bounced = true;
 			}
 			if (this.x === 0 && this.y === 0) {
 				console.log("top left");
+				bounced = true;
 			}
 
 			// Right
@@ -230,18 +238,27 @@ class Logo {
 					this.t = new Date().getTime() - this.start;
 				}
 				this.xVelocity = -this.xVelocity;
+				bounced = true;
 			}
 			// Left
 			if (this.y === 0) {
 				this.yVelocity = -this.yVelocity;
+				bounced = true;
 			}
 			// Bottom
 			if (this.y + this.logoHeight === this.canvasHeight) {
 				this.yVelocity = -this.yVelocity;
+				bounced = true;
 			}
 			// Top
 			if (this.x === 0) {
 				this.xVelocity = -this.xVelocity;
+				bounced = true;
+			}
+
+			if (bounced) {
+				this.imgIndex = (this.imgIndex + 1) % this.imgArr.length;
+				this.currImg = this.imgArr[this.imgIndex];
 			}
 		}
 

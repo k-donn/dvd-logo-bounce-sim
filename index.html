@@ -13,18 +13,24 @@
 	<script>
 		let el = document.getElementById("mockScreen");
 		let ctx = el.getContext("2d");
-		ctx.canvas.width = 1216;
-		ctx.canvas.height = 572;
+		ctx.canvas.width = 1200;
+		ctx.canvas.height = 800;
 
-		let img = new Image();
-		img.src = "/img/dvd-logo2.jpg";
+		imgArr = [];
+		colors = ["blue", "green", "red", "yel"];
+		for (let index = 0; index < colors.length; index++) {
+			const color = colors[index];
+			let img = new Image();
+			img.src = `/img/dvd-logo-${color}.jpg`;
+			imgArr.push(img);
+		}
 
 		let logo = new Logo(
 			el,
 			ctx,
 			ctx.canvas.width,
 			ctx.canvas.height,
-			img,
+			imgArr,
 			5
 		);
 
