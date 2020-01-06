@@ -208,50 +208,47 @@ class Logo {
 
 			let bounced = false;
 
+			let right = this.x + this.logoWidth === this.canvasWidth;
+			let left = this.x === 0;
+
+			let top = this.y === 0;
+			let bottom = this.y + this.logoHeight === this.canvasHeight;
+
 			// The logo is drawn from its top-left corner
-			if (
-				this.y + this.logoHeight === this.canvasHeight &&
-				this.x + this.logoWidth === this.canvasWidth
-			) {
+			if (bottom && right) {
 				console.log("bottom right");
 				bounced = true;
 			}
-			if (
-				this.y + this.logoHeight === this.canvasHeight &&
-				this.x === 0
-			) {
+			if (bottom && left) {
 				console.log("bottom left");
 				bounced = true;
 			}
-			if (this.y === 0 && this.x + this.logoWidth === this.canvasWidth) {
+			if (top && right) {
 				console.log("top right");
 				bounced = true;
 			}
-			if (this.x === 0 && this.y === 0) {
+			if (top && left) {
 				console.log("top left");
 				bounced = true;
 			}
 
 			// Right
-			if (this.x + this.logoWidth === this.canvasWidth) {
+			if (right) {
 				if (!this.t) {
 					this.t = new Date().getTime() - this.start;
 				}
 				this.xVelocity = -this.xVelocity;
 				bounced = true;
 			}
-			// Left
-			if (this.y === 0) {
+			if (top) {
 				this.yVelocity = -this.yVelocity;
 				bounced = true;
 			}
-			// Bottom
-			if (this.y + this.logoHeight === this.canvasHeight) {
+			if (bottom) {
 				this.yVelocity = -this.yVelocity;
 				bounced = true;
 			}
-			// Top
-			if (this.x === 0) {
+			if (left) {
 				this.xVelocity = -this.xVelocity;
 				bounced = true;
 			}
