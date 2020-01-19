@@ -1,6 +1,6 @@
 /*
 TODO
-- Type hints?
+- Use actual animation callbacks
 */
 
 /**
@@ -9,36 +9,67 @@ TODO
  * between corner hits.
  */
 class Logo {
+	/**
+	 * Create a Logo object
+	 *
+	 * @param {HTMLCanvasElement} canvas The empty canvas on the page
+	 * @param {CanvasRenderingContext2D} context The created canvas context
+	 * @param {number} canvasWidth Width of the canvas to make
+	 * @param {number} canvasHeight Height of the canvas to make
+	 * @param {Array<HTMLImageElement>} imgArr Available sprites for the DVD logo
+	 * @param {number} rate How fast to animate (not interval)
+	 */
 	constructor(canvas, context, canvasWidth, canvasHeight, imgArr, rate) {
+		/** @type {HTMLCanvasElement} */
 		this.canvas = canvas;
+		/** @type {CanvasRenderingContext2D} */
 		this.context = context;
 
+		/** @type {number} */
 		this.imgIndex = 0;
+		/** @type {HTMLImageElement} */
 		this.currImg = imgArr[this.imgIndex];
+		/** @type {Array<HTMLImageElement>} */
 		this.imgArr = imgArr;
 
+		/** @type {number} */
 		this.x = 0;
+		/** @type {number} */
 		this.y = 0;
 
+		/** @type {number} */
 		this.xVelocity = 1;
+		/** @type {number} */
 		this.yVelocity = 1;
 
+		/** @type {number} */
 		this.logoWidth = imgArr[0].width;
+		/** @type {number} */
 		this.logoHeight = imgArr[0].height;
 
+		/** @type {number} */
 		this.canvasWidth = canvasWidth;
+		/** @type {number} */
 		this.canvasHeight = canvasHeight;
 
+		/** @type {number} */
 		this.rate = rate;
 
+		/** @type {number} */
 		this.period = null;
+		/** @type {number} */
 		this.t = null;
+		/** @type {number} */
 		this.start = null;
 
+		/** @type {string} */
 		this.corner1 = null;
+		/** @type {string} */
 		this.corner2 = null;
 
+		/** @type {number} */
 		this.widthDiff = this.canvasWidth - this.logoWidth;
+		/** @type {number} */
 		this.heightDiff = this.canvasHeight - this.logoHeight;
 
 		console.log("Width Diff " + this.widthDiff);
@@ -208,13 +239,13 @@ class Logo {
 
 			let bounced = false;
 
+			// The logo is drawn from its top-left corner
 			let right = this.x + this.logoWidth === this.canvasWidth;
 			let left = this.x === 0;
 
 			let top = this.y === 0;
 			let bottom = this.y + this.logoHeight === this.canvasHeight;
 
-			// The logo is drawn from its top-left corner
 			if (bottom && right) {
 				console.log("bottom right");
 				bounced = true;
