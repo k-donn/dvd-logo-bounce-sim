@@ -72,16 +72,17 @@ class Logo {
 		/** @type {number} */
 		this.heightDiff = this.canvasHeight - this.logoHeight;
 
+		/** @type {number} */
+		this.diffGcd = this.gcd(this.widthDiff, this.heightDiff);
+		/** @type {number} */
+		this.diffLcm = this.lcm(this.widthDiff, this.heightDiff);
+
+		console.group("Differences");
 		console.log("Width Diff " + this.widthDiff);
 		console.log("Height Diff " + this.heightDiff);
-		console.log(
-			"gcd of WdthDiff and HgtDiff " +
-				this.gcd(this.widthDiff, this.heightDiff)
-		);
-		console.log(
-			"lcm of WdthDiff and HgtDiff " +
-				this.lcm(this.widthDiff, this.heightDiff)
-		);
+		console.log("gcd of WdthDiff and HgtDiff " + this.diffGcd);
+		console.log("lcm of WdthDiff and HgtDiff " + this.diffLcm);
+		console.groupEnd("Differences");
 
 		this.findCorners();
 	}
@@ -90,54 +91,22 @@ class Logo {
 	 * Determine the first two corners the logo will hit if any.
 	 */
 	findCorners() {
-		if (
-			Math.abs(this.x - this.y) %
-				this.gcd(this.widthDiff, this.heightDiff) ===
-			0
-		) {
+		let xyDiff = Math.abs(this.x - this.y);
+		if (xyDiff % this.diffGcd === 0) {
 			// corners will be reached
-			if (
-				(Math.abs(this.x - this.y) /
-					this.gcd(this.widthDiff, this.heightDiff)) %
-					2 ===
-				0
-			) {
+			console.group("Corners");
+			if ((xyDiff / this.diffGcd) % 2 === 0) {
 				this.corner1 =
-					((this.lcm(this.widthDiff, this.heightDiff) /
-						this.heightDiff) %
-						2 ===
-					0
-						? "T"
-						: "B") +
-					((this.lcm(this.widthDiff, this.heightDiff) /
-						this.widthDiff) %
-						2 ===
-					0
-						? "L"
-						: "R");
+					((this.diffLcm / this.heightDiff) % 2 === 0 ? "T" : "B") +
+					((this.diffLcm / this.widthDiff) % 2 === 0 ? "L" : "R");
 				this.corner2 = "TL";
 
-				console.group("corner-1");
 				console.log(this.corner1);
-				console.groupEnd("corner-1");
-
-				console.group("corner 2");
 				console.log(this.corner2);
-				console.groupEnd("corner-2");
 			} else {
 				this.corner1 =
-					((this.lcm(this.widthDiff, this.heightDiff) /
-						this.heightDiff) %
-						2 !==
-					0
-						? "T"
-						: "B") +
-					((this.lcm(this.widthDiff, this.heightDiff) /
-						this.widthDiff) %
-						2 !==
-					0
-						? "L"
-						: "R");
+					((this.diffLcm / this.heightDiff) % 2 !== 0 ? "T" : "B") +
+					((this.diffLcm / this.widthDiff) % 2 !== 0 ? "L" : "R");
 				this.corner2 = "BR";
 
 				console.group("corner-1");
@@ -151,6 +120,7 @@ class Logo {
 		} else {
 			console.log("No corner!");
 		}
+		console.groupEnd("Corners");
 	}
 
 	/**
@@ -191,18 +161,18 @@ class Logo {
 		this.context.drawImage(this.currImg, this.x, this.y);
 
 		if (this.t) {
-			this.period =
-				(this.t * this.lcm(this.widthDiff, this.heightDiff)) /
-				this.widthDiff;
+			this.period = (this.t * this.diffLcm) / this.widthDiff;
 			this.context.fillStyle = "#ff0000";
 			this.context.font = "18px Courier New";
+
+			let deltaTime = new Date().getTime() - this.start;
+			let periodsElapsed = deltaTime % this.period;
+
 			let timeToImpact =
-				(
-					(this.period -
-						((new Date().getTime() - this.start) % this.period)) /
-					1000
-				).toFixed(3) + " s.";
-			const periodTxt = (this.period / 1000).toFixed(3);
+				((this.period - periodsElapsed) / 1000).toFixed(3) + " s.";
+
+			let periodTxt = (this.period / 1000).toFixed(3);
+
 			this.context.fillText(
 				`Period: ${this.corner1 ? periodTxt + "s." : "None"}`,
 				10,
@@ -240,8 +210,8 @@ class Logo {
 			let bounced = false;
 
 			// The logo is drawn from its top-left corner
-			let right = this.x + this.logoWidth === this.canvasWidth;
 			let left = this.x === 0;
+			let right = this.x + this.logoWidth === this.canvasWidth;
 
 			let top = this.y === 0;
 			let bottom = this.y + this.logoHeight === this.canvasHeight;
