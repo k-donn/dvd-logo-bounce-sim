@@ -13,24 +13,22 @@ class Logo {
 	 * Create a Logo object
 	 *
 	 * @param {HTMLCanvasElement} canvas The empty canvas on the page
-	 * @param {CanvasRenderingContext2D} context The created canvas context
 	 * @param {number} canvasWidth Width of the canvas to make
 	 * @param {number} canvasHeight Height of the canvas to make
 	 * @param {Array<HTMLImageElement>} imgArr Available sprites for the DVD logo
 	 * @param {number} rate How fast to animate (not interval)
 	 */
-	constructor(canvas, context, canvasWidth, canvasHeight, imgArr, rate) {
-		/** @type {HTMLCanvasElement} */
+	constructor(canvas, canvasWidth, canvasHeight, imgArr, rate) {
 		this.canvas = canvas;
 		/** @type {CanvasRenderingContext2D} */
-		this.context = context;
+		this.context = canvas.getContext("2d");
 
-		/** @type {number} */
-		this.imgIndex = 0;
-		/** @type {HTMLImageElement} */
-		this.currImg = imgArr[this.imgIndex];
-		/** @type {Array<HTMLImageElement>} */
+		this.canvasWidth = canvasWidth;
+		this.canvasHeight = canvasHeight;
+
 		this.imgArr = imgArr;
+
+		this.rate = rate;
 
 		/** @type {number} */
 		this.x = 0;
@@ -48,34 +46,21 @@ class Logo {
 		this.logoHeight = imgArr[0].height;
 
 		/** @type {number} */
-		this.canvasWidth = canvasWidth;
-		/** @type {number} */
-		this.canvasHeight = canvasHeight;
+		this.imgIndex = 0;
+		this.currImg = imgArr[this.imgIndex];
 
-		/** @type {number} */
-		this.rate = rate;
-
-		/** @type {number} */
-		this.period = null;
-		/** @type {number} */
-		this.t = null;
-		/** @type {number} */
-		this.start = null;
-
-		/** @type {string} */
-		this.corner1 = null;
-		/** @type {string} */
-		this.corner2 = null;
-
-		/** @type {number} */
 		this.widthDiff = this.canvasWidth - this.logoWidth;
-		/** @type {number} */
 		this.heightDiff = this.canvasHeight - this.logoHeight;
 
-		/** @type {number} */
 		this.diffGcd = this.gcd(this.widthDiff, this.heightDiff);
-		/** @type {number} */
 		this.diffLcm = this.lcm(this.widthDiff, this.heightDiff);
+
+		this.period = null;
+		this.t = null;
+		this.start = null;
+
+		this.corner1 = null;
+		this.corner2 = null;
 
 		console.group("Differences");
 		console.log("Width Diff " + this.widthDiff);
@@ -194,8 +179,6 @@ class Logo {
 				600,
 				20
 			);
-
-			// debugger;
 		}
 	}
 
