@@ -15,10 +15,10 @@ class Logo {
 	 * @param {HTMLCanvasElement} canvas The empty canvas on the page
 	 * @param {number} canvasWidth Width of the canvas to make
 	 * @param {number} canvasHeight Height of the canvas to make
-	 * @param {Array<HTMLImageElement>} imgArr Available sprites for the DVD logo
+	 * @param {Array<HTMLImageElement>} imgMap Available sprites for the DVD logo
 	 * @param {number} rate How fast to animate (not interval)
 	 */
-	constructor(canvas, canvasWidth, canvasHeight, imgArr, rate) {
+	constructor(canvas, canvasWidth, canvasHeight, colors, imgMap, rate) {
 		this.canvas = canvas;
 		/** @type {CanvasRenderingContext2D} */
 		this.context = canvas.getContext("2d");
@@ -26,7 +26,7 @@ class Logo {
 		this.canvasWidth = canvasWidth;
 		this.canvasHeight = canvasHeight;
 
-		this.imgArr = imgArr;
+		this.imgMap = imgMap;
 
 		this.rate = rate;
 
@@ -40,14 +40,17 @@ class Logo {
 		/** @type {number} */
 		this.yVelocity = 1;
 
-		/** @type {number} */
-		this.logoWidth = imgArr[0].width;
-		/** @type {number} */
-		this.logoHeight = imgArr[0].height;
+		this.colors = colors;
 
 		/** @type {number} */
-		this.imgIndex = 0;
-		this.currImg = imgArr[this.imgIndex];
+		this.colIndex = 0;
+		this.currCol = this.colors[this.colIndex];
+		this.currImg = this.imgMap[this.currCol];
+
+		/** @type {number} */
+		this.logoWidth = this.imgMap[this.currCol].width;
+		/** @type {number} */
+		this.logoHeight = this.imgMap[this.currCol].height;
 
 		this.widthDiff = this.canvasWidth - this.logoWidth;
 		this.heightDiff = this.canvasHeight - this.logoHeight;
@@ -145,6 +148,22 @@ class Logo {
 
 		this.context.drawImage(this.currImg, this.x, this.y);
 
+		this.context.lineWidth = 2;
+		this.context.strokeStyle = this.currCol;
+
+		this.context.beginPath();
+		this.context.moveTo(this.x, this.y);
+
+		this.context.lineTo(this.x + this.currImg.width, this.y);
+		this.context.lineTo(
+			this.x + this.currImg.width,
+			this.y + this.currImg.height
+		);
+		this.context.lineTo(this.x, this.y + this.currImg.height);
+		this.context.lineTo(this.x, this.y);
+
+		this.context.stroke();
+
 		if (this.t) {
 			this.period = (this.t * this.diffLcm) / this.widthDiff;
 			this.context.fillStyle = "#ff0000";
@@ -238,8 +257,9 @@ class Logo {
 			}
 
 			if (bounced) {
-				this.imgIndex = (this.imgIndex + 1) % this.imgArr.length;
-				this.currImg = this.imgArr[this.imgIndex];
+				this.colIndex = (this.colIndex + 1) % this.colors.length;
+				this.currCol = this.colors[this.colIndex];
+				this.currImg = this.imgMap[this.currCol];
 			}
 		}
 

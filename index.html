@@ -16,20 +16,20 @@
 		ctx.canvas.width = 1200;
 		ctx.canvas.height = 800;
 
-		imgArr = [];
-		colors = ["blue", "green", "red", "yel"];
-		for (let index = 0; index < colors.length; index++) {
-			const color = colors[index];
+		imgMap = [];
+		colors = ["blue", "green", "red", "yellow"];
+		for (let color of colors) {
 			let img = new Image();
 			img.src = `/img/dvd-logo-${color}.jpg`;
-			imgArr.push(img);
+			imgMap[color] = img;
 		}
 
 		let logo = new Logo(
 			el,
 			ctx.canvas.width,
 			ctx.canvas.height,
-			imgArr,
+			colors,
+			imgMap,
 			5
 		);
 
